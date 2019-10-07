@@ -9,6 +9,7 @@ class ProductModel{
     return fetch('/demo2_2/data/products.json').then(answ => answ.json())
       .then((d) => {
         d.forEach(prodObj => {
+          prodObj.url === `/demo2_2/img/${prodObj.id}/prod.jpg`;
           if(prodObj.type === 'fish'){
             prodObj.features = [];
             if(prodObj.rapacity === true){
@@ -32,10 +33,10 @@ class ProductModel{
           }
         });
         const productList = localStorage.getItem('productList');
-        if(Boolean(productList) === false || productList === 'undefined'){
-          console.log(11);
+        // if(Boolean(productList) === false || productList === 'undefined'){
+        //   console.log(11);
           localStorage.setItem('productList', JSON.stringify(d));
-        }
+        // }
         this.eventManager.publish('Products were received', d);
       });
   }
