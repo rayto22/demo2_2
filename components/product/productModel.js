@@ -4,7 +4,7 @@ class ProductModel{
   }
 
   getProductList() {
-    // localStorage.removeItem('productList');
+    localStorage.removeItem('productList');
 
     return fetch('/demo2_2/data/products.json').then(answ => answ.json())
       .then((d) => {
