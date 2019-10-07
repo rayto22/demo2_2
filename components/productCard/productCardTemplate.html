@@ -1,0 +1,20 @@
+<div class="product_div card_{{ id }}_div center">
+  <div class="is-pulled-left">
+    <div class="product_add_info_card_{{ id }}">
+      <div class="box center prod_image">
+        <img src="{{ imgSrc }}" alt="{{ name }}">
+      </div>
+      <div class="center prod_name_div is-size-6"> {{ name }} </div>
+    </div>
+    <div class="columns">
+      <div class="column is-5">
+        <div><a class="button is-small is-fullwidth card_{{ id }}_buy_btn">Buy</a></div>
+        <div><input class="input is-small card_{{ id }}_quantity_to_buy" type="number" name="points" step="1" value="1" min="1" max="{{ quantity }}"></div>
+      </div>
+      <div class="column is-7">
+        <div class="has-text-right">Quantity: <span class="card_{{ id }}_quantity">{{ quantity }}</span></div>
+        <div class="has-text-right">{{ price }} $</div>
+      </div>
+    </div>
+  <div>
+</div>

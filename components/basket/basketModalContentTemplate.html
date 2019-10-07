@@ -1,0 +1,18 @@
+<div class="box purchase_{{ id }}">
+  <div class="columns">
+    <div class="column-auto">
+        <img src="{{ imgSrc }}" alt="{{ prodName }}">
+    </div>
+    <div class="column">
+      <div>Name: {{ prodName }}</div>
+      <div>Quantity: <span class="basket_content_purchase_quantity_{{ id }}">{{ prodQuantity }}</span></div>
+      <div>Price for one: {{ prodPriceFor1 }}$</div>
+      <div>In total: <span class="basket_content_purchase_totalPrice_{{ id }}">{{ prodPriceForAll }}</span>$</div>
+      <div class="buttons has-addons is-right">
+        <a type="button" class="button basket_content_add_prod_{{ id }}" data-id-num="{{ id }}">More</a>
+        <a type="button" class="button basket_content_remove_prod_{{ id }}" data-id-num="{{ id }}">Less</a>
+        <a type="button" class="button basket_content_cancel_prod_{{ id }}" data-id-num="{{ id }}">Cancel</a>
+      </div>
+    </div>
+  </div>
+</div>
