@@ -56,7 +56,7 @@ class BasketModel{
   }
 
   sendEmailConfirmationToCustomer(customersData) {
-    const url = 'http://so2niko.zzz.com.ua/ss/api.php?data=';
+    const url = 'https://so2niko.zzz.com.ua/ss/api.php?data=';
     this.tempStorageForPurchase = Object.assign({}, this.basketStatus.content)
     const data = {
       'mail': customersData.email,
