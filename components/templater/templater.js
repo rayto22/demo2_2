@@ -10,24 +10,24 @@ class Templater{
 
     this.templatePathColl = {
       // Filter
-      'cancelBtnTemplate': '/components/filter/cancelButtonTemplate.html',
-      'categoryTemplate': '/components/filter/categoryTemplate.html',
-      'mainFilterTemplate': '/components/filter/mainFilterTemplate.html',
-      'addFilterBox': '/components/filter/addFilterBox.html',
-      'addFilterCheckBox': '/components/filter/addFilterCheckBox.html',
+      'cancelBtnTemplate': '/demo2_2/components/filter/cancelButtonTemplate.html',
+      'categoryTemplate': '/demo2_2/components/filter/categoryTemplate.html',
+      'mainFilterTemplate': '/demo2_2/components/filter/mainFilterTemplate.html',
+      'addFilterBox': '/demo2_2/components/filter/addFilterBox.html',
+      'addFilterCheckBox': '/demo2_2/components/filter/addFilterCheckBox.html',
       // Sort
-      'sortBtnTemplate': '/components/sort/sortBtnTemplate.html',
+      'sortBtnTemplate': '/demo2_2/components/sort/sortBtnTemplate.html',
       // Products
-      'productCardTemplate': '/components/productCard/productCardTemplate.html',
-      'productCardInfoModalTemplate': '/components/productCard/productCardInfoModalTemplate.html',
-      'productCardPropertyTemplate': '/components/productCard/productCardPropertyTemplate.html',
+      'productCardTemplate': '/demo2_2/components/productCard/productCardTemplate.html',
+      'productCardInfoModalTemplate': '/demo2_2/components/productCard/productCardInfoModalTemplate.html',
+      'productCardPropertyTemplate': '/demo2_2/components/productCard/productCardPropertyTemplate.html',
       // Basket
-      'basketBtnTemplate': '/components/basket/basketBtnTemplate.html',
-      'basketModalTemplate': '/components/basket/basketModalTemplate.html',
-      'basketModalContentTemplate': '/components/basket/basketModalContentTemplate.html',
-      'basketModalOrderFormTemplate': '/components/basket/basketModalOrderFormTemplate.html',
-      'basketModalOrderSuccessTemplate': '/components/basket/basketModalOrderSuccessTemplate.html',
-      'basketModalHistoryTemplate': '/components/basket/basketModalHistoryTemplate.html'
+      'basketBtnTemplate': '/demo2_2/components/basket/basketBtnTemplate.html',
+      'basketModalTemplate': '/demo2_2/components/basket/basketModalTemplate.html',
+      'basketModalContentTemplate': '/demo2_2/components/basket/basketModalContentTemplate.html',
+      'basketModalOrderFormTemplate': '/demo2_2/components/basket/basketModalOrderFormTemplate.html',
+      'basketModalOrderSuccessTemplate': '/demo2_2/components/basket/basketModalOrderSuccessTemplate.html',
+      'basketModalHistoryTemplate': '/demo2_2/components/basket/basketModalHistoryTemplate.html'
     };
     this.templatesQuantity = Object.keys(this.templatePathColl).length;
     this.templatesQuantityLoaded = 0;

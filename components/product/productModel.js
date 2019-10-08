@@ -3,9 +3,10 @@ class ProductModel{
   }
 
   getProductList() {
-    return fetch('/data/products.json').then(answ => answ.json())
+    return fetch('/demo2_2/data/products.json').then(answ => answ.json())
       .then((d) => {
         d.forEach(prodObj => {
+          prodObj.url = `/demo2_2/img/${prodObj.id}/prod.jpg`;
           if(prodObj.type === 'fish'){
             prodObj.features = [];
             if(prodObj.rapacity === true){
