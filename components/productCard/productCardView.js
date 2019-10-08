@@ -1,8 +1,7 @@
 import { Templater } from '../templater/templater.js';
 
 class ProductCardView {
-  constructor(controller) {
-    this.controller = controller;
+  constructor() {
     this.templater = new Templater;
 
     this.domStorage = {
@@ -28,7 +27,7 @@ class ProductCardView {
     }
   }
 
-  renderProductCard(productData) {
+  renderProductCard(productData, buyProduct, openModalWindowAddInfo) {
     const arrOfData = [
       {
         id: productData.id,
@@ -44,23 +43,12 @@ class ProductCardView {
       one: [{
         selector: `.card_${productData.id}_buy_btn`,
         eventName: 'click',
-        funName: () => this.controller.buyProduct()
+        funName: () => buyProduct()
       },
       {
         selector: `.product_add_info_card_${productData.id}`,
         eventName: 'click',
-        funName: () => this.controller.openModalWindowAddInfo()
-      
-      // },      
-      // {
-      //   selector: `.product_add_info_card_${productData.id}`,
-      //   eventName: 'mouseover',
-      //   funName: () => this.addHoverClass()
-      // },
-      // {
-      //   selector: `.product_add_info_card_${productData.id}`,
-      //   eventName: 'mouseout',
-      //   funName: () => this.deleteHoverClass()
+        funName: () => openModalWindowAddInfo()
       }],
       all: []}
 
@@ -85,20 +73,28 @@ class ProductCardView {
       all: []}
     this.templater.initTemplate('productCardInfoModalTemplate', arrOfData, this.domStorage.modalWindowInfoContainer.divDOM, eventObj);
     this.domStorage.modalWindowInfo.divDOM = document.querySelector('.modal_window_product_card');
+    this.domStorage.modalWindowInfo.sectionDOM = document.querySelector('.modal_window_product_card_content');
     this.domStorage.modalWindowInfo.divDOM.classList.add('is-active');
+  }
+
+  renderModalWindowAddInfoProperties(prodData) {
+    Object.entries(prodData).forEach((property) => {
+      if(property[0] === 'id' || property[0] === 'url'){
+        return;
+      }
+      const arrOfData = [{
+        key: property[0],
+        value: property[1]
+      }];
+      
+      this.templater.initTemplate('productCardPropertyTemplate', arrOfData, this.domStorage.modalWindowInfo.sectionDOM);
+    })
+
   }
 
   removeModalWindowAddInfo() {
     this.domStorage.modalWindowInfo.divDOM.classList.remove('is-active');
     this.templater.resetContainer(this.domStorage.modalWindowInfoContainer.divDOM, 'modalWindowProductCardInfo');
-  }
-
-  addHoverClass() {
-    console.log('hover');
-  }
-
-  deleteHoverClass() {
-    console.log('unhover');
   }
 
   getPurchasedQuantity() {

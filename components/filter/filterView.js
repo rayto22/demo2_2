@@ -1,8 +1,7 @@
 import { Templater } from '../templater/templater.js';
 
 class FilterView{
-  constructor(contr) {
-    this.controller = contr;
+  constructor() {
     this.templater = new Templater;
 
     this.cancelBtnObj = {
@@ -77,19 +76,18 @@ class FilterView{
       }
     };
 
-    this.hangEvents();
   }
 
-  hangEvents(){
-    window.addEventListener('unload', () => this.controller.saveFilterStatus());
-    this.domStorage.name.inputDOM.addEventListener('keyup', () => this.controller.initFilterByName());
+  hangEvents(saveFilterStatus, initFilterByName){
+    window.addEventListener('unload', () => saveFilterStatus());
+    this.domStorage.name.inputDOM.addEventListener('keyup', () => initFilterByName());
   }
 
   clearCancelButtonsDiv() {
     this.templater.resetContainer(this.domStorage.cancelFilter.divDOM, 'cancelButtonFilter');
   }
 
-  renderCancelButton(type) {
+  renderCancelButton(type, func) {
     const arrOfData = [
       {
         className: this.cancelBtnObj[type].className, 
@@ -101,14 +99,14 @@ class FilterView{
       one: [{
         selector: `.${this.cancelBtnObj[type].className}`,
         eventName: 'click',
-        funName: () => this.controller[this.cancelBtnObj[type].funName]('cancel', type)
+        funName: () => func('cancel', type)
       }],
       all: []}
 
     this.templater.initTemplate('cancelBtnTemplate', arrOfData, this.domStorage.cancelFilter.divDOM, eventObj, true);
   }
 
-  renderCategories(categoriesList) {
+  renderCategories(categoriesList, initFilterByCateg) {
     const arrOfData = [...categoriesList].map((categ) => {
       return {categName: categ, categContent: `${categ}s`};
     });
@@ -119,7 +117,7 @@ class FilterView{
         return {
           selector: `.nav_category[data-categ-name='${categ}']`,
           eventName: 'click',
-          funName: () => this.controller.initFilterByCateg(categ)
+          funName: () => initFilterByCateg(categ)
         }}),
       all: []
     };
@@ -127,7 +125,7 @@ class FilterView{
     this.templater.initTemplate('categoryTemplate', arrOfData, this.domStorage.category.divDOM, eventObj);
   }
 
-  renderMainFilter() {
+  renderMainFilter(initFilterByPriceOrQuantity) {
     const templateArrOfData = [{
       filterHead: 'Filters',
       filterPriceHead: 'Price',
@@ -139,22 +137,22 @@ class FilterView{
       one: [{
         selector: '.filter_price_min',
         eventName: 'keyup',
-        funName: () => this.controller.initFilterByPriceOrQuantity(undefined, 'price')
+        funName: () => initFilterByPriceOrQuantity(undefined, 'price')
       },
       {
         selector: '.filter_price_max',
         eventName: 'keyup',
-        funName: () => this.controller.initFilterByPriceOrQuantity(undefined, 'price')
+        funName: () => initFilterByPriceOrQuantity(undefined, 'price')
       },
       {
         selector: '.filter_quantity_min',
         eventName: 'keyup',
-        funName: () => this.controller.initFilterByPriceOrQuantity(undefined, 'quantity')
+        funName: () => initFilterByPriceOrQuantity(undefined, 'quantity')
       },
       {
         selector: '.filter_quantity_max',
         eventName: 'keyup',
-        funName: () => this.controller.initFilterByPriceOrQuantity(undefined, 'quantity')
+        funName: () => initFilterByPriceOrQuantity(undefined, 'quantity')
       },
     ],
     all: []
@@ -174,7 +172,7 @@ class FilterView{
 
   }
 
-  renderAdditionalFilter(categName, propsObj) {
+  renderAdditionalFilter(categName, propsObj, initAddFilterCheckBox) {
     this.templater.resetContainer(this.domStorage.additionalFilterDiv.divDOM, 'addFilter1');
     this.templater.resetContainer(this.domStorage.additionalFilterDiv.divDOM, 'addFilter2');
     switch (categName) {
@@ -198,7 +196,7 @@ class FilterView{
             one: [{
               selector: `.addFilter${templateArrOfDataFirstFilter[0].filterName}${templateArrOfDataFirstFilter[0].type}`,
               eventName: 'click',
-              funName: () => this.controller.initAddFilterCheckBox(undefined, templateArrOfDataFirstFilter[0].filterName, templateArrOfDataFirstFilter[0].type, 'firstAddFilter')
+              funName: () => initAddFilterCheckBox(undefined, templateArrOfDataFirstFilter[0].filterName, templateArrOfDataFirstFilter[0].type, 'firstAddFilter')
             }],
             all: []};
           this.templater.initTemplate('addFilterCheckBox', templateArrOfDataFirstFilter, firstFilterDivDOM, templateObjOfEvents, true);
@@ -216,7 +214,7 @@ class FilterView{
             one: [{
               selector: `.addFilter${templateArrOfDataSecondFilter[0].filterName}${templateArrOfDataSecondFilter[0].type}`,
               eventName: 'click',
-              funName: () => this.controller.initAddFilterCheckBox(undefined, templateArrOfDataSecondFilter[0].filterName, templateArrOfDataSecondFilter[0].type, 'secondAddFilter')
+              funName: () => initAddFilterCheckBox(undefined, templateArrOfDataSecondFilter[0].filterName, templateArrOfDataSecondFilter[0].type, 'secondAddFilter')
             }],
             all: []};
           this.templater.initTemplate('addFilterCheckBox', templateArrOfDataSecondFilter, secondFilterDivDOM, templateObjOfEvents, true);
@@ -245,7 +243,7 @@ class FilterView{
             one: [{
               selector: `.addFilter${templateArrOfDataFirstFilter[0].filterName}${templateArrOfDataFirstFilter[0].type}`,
               eventName: 'click',
-              funName: () => this.controller.initAddFilterCheckBox(undefined, templateArrOfDataFirstFilter[0].filterName, templateArrOfDataFirstFilter[0].type, 'firstAddFilter')
+              funName: () => initAddFilterCheckBox(undefined, templateArrOfDataFirstFilter[0].filterName, templateArrOfDataFirstFilter[0].type, 'firstAddFilter')
             }],
             all: []};
           this.templater.initTemplate('addFilterCheckBox', templateArrOfDataFirstFilter, firstFilterDivDOM, templateObjOfEvents, true);
@@ -263,7 +261,7 @@ class FilterView{
             one: [{
               selector: `.addFilter${templateArrOfDataSecondFilter[0].filterName}${templateArrOfDataSecondFilter[0].type}`,
               eventName: 'click',
-              funName: () => this.controller.initAddFilterCheckBox(undefined, templateArrOfDataSecondFilter[0].filterName, templateArrOfDataSecondFilter[0].type, 'secondAddFilter')
+              funName: () => initAddFilterCheckBox(undefined, templateArrOfDataSecondFilter[0].filterName, templateArrOfDataSecondFilter[0].type, 'secondAddFilter')
             }],
             all: []};
           this.templater.initTemplate('addFilterCheckBox', templateArrOfDataSecondFilter, secondFilterDivDOM, templateObjOfEvents, true);
@@ -292,7 +290,7 @@ class FilterView{
             one: [{
               selector: `.addFilter${templateArrOfDataFirstFilter[0].filterName}${templateArrOfDataFirstFilter[0].type}`,
               eventName: 'click',
-              funName: () => this.controller.initAddFilterCheckBox(undefined, templateArrOfDataFirstFilter[0].filterName, templateArrOfDataFirstFilter[0].type, 'firstAddFilter')
+              funName: () => initAddFilterCheckBox(undefined, templateArrOfDataFirstFilter[0].filterName, templateArrOfDataFirstFilter[0].type, 'firstAddFilter')
             }],
             all: []};
           this.templater.initTemplate('addFilterCheckBox', templateArrOfDataFirstFilter, firstFilterDivDOM, templateObjOfEvents, true);
@@ -310,7 +308,7 @@ class FilterView{
             one: [{
               selector: `.addFilter${templateArrOfDataSecondFilter[0].filterName}${templateArrOfDataSecondFilter[0].type}`,
               eventName: 'click',
-              funName: () => this.controller.initAddFilterCheckBox(undefined, templateArrOfDataSecondFilter[0].filterName, templateArrOfDataSecondFilter[0].type, 'secondAddFilter')
+              funName: () => initAddFilterCheckBox(undefined, templateArrOfDataSecondFilter[0].filterName, templateArrOfDataSecondFilter[0].type, 'secondAddFilter')
             }],
             all: []};
           this.templater.initTemplate('addFilterCheckBox', templateArrOfDataSecondFilter, secondFilterDivDOM, templateObjOfEvents, true);
@@ -339,7 +337,7 @@ class FilterView{
             one: [{
               selector: `.addFilter${templateArrOfDataFirstFilter[0].filterName}${templateArrOfDataFirstFilter[0].type}`,
               eventName: 'click',
-              funName: () => this.controller.initAddFilterCheckBox(undefined, templateArrOfDataFirstFilter[0].filterName, templateArrOfDataFirstFilter[0].type, 'firstAddFilter')
+              funName: () => initAddFilterCheckBox(undefined, templateArrOfDataFirstFilter[0].filterName, templateArrOfDataFirstFilter[0].type, 'firstAddFilter')
             }],
             all: []};
           this.templater.initTemplate('addFilterCheckBox', templateArrOfDataFirstFilter, firstFilterDivDOM, templateObjOfEvents, true);
@@ -357,7 +355,7 @@ class FilterView{
             one: [{
               selector: `.addFilter${templateArrOfDataSecondFilter[0].filterName}${templateArrOfDataSecondFilter[0].type}`,
               eventName: 'click',
-              funName: () => this.controller.initAddFilterCheckBox(undefined, templateArrOfDataSecondFilter[0].filterName, templateArrOfDataSecondFilter[0].type, 'secondAddFilter')
+              funName: () => initAddFilterCheckBox(undefined, templateArrOfDataSecondFilter[0].filterName, templateArrOfDataSecondFilter[0].type, 'secondAddFilter')
             }],
             all: []};
           this.templater.initTemplate('addFilterCheckBox', templateArrOfDataSecondFilter, secondFilterDivDOM, templateObjOfEvents, true);

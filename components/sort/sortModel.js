@@ -1,6 +1,5 @@
 class SortModel{
-  constructor(contr) {
-    this.controller = contr;
+  constructor() {
   }
 
   initSortStatus() {
@@ -23,10 +22,6 @@ class SortModel{
   }
 
   setSortStatus(sortType) {
-    if(this.sortStatus.status !== 'cancel'){
-      this.controller.unsetOrderIconToButton(this.sortStatus.status);
-    }
-
     if(this.sortStatus.counter === 2 && this.sortStatus.status === sortType){
       this.sortStatus.status = 'cancel';
       this.sortStatus.orderStrict = true;
@@ -41,8 +36,11 @@ class SortModel{
     }
   }
 
+  getSortStatus() {
+    return this.sortStatus;
+  }
+
   sortProductList(prodArr) {
-    this.controller.setOrderIconToButton(this.sortStatus);
     if(this.sortStatus.status !== "cancel"){
 
       prodArr.sort((a,b) => {

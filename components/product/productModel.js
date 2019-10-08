@@ -1,15 +1,11 @@
 class ProductModel{
-  constructor(eventManager) {
-    this.eventManager = eventManager;
+  constructor() {
   }
 
   getProductList() {
-    // localStorage.removeItem('productList');
-
-    return fetch('/demo2_2/data/products.json').then(answ => answ.json())
+    return fetch('/data/products.json').then(answ => answ.json())
       .then((d) => {
         d.forEach(prodObj => {
-          prodObj.url = `/demo2_2/img/${prodObj.id}/prod.jpg`;
           if(prodObj.type === 'fish'){
             prodObj.features = [];
             if(prodObj.rapacity === true){
@@ -32,12 +28,13 @@ class ProductModel{
             }
           }
         });
-        const productList = localStorage.getItem('productList');
-        // if(Boolean(productList) === false || productList === 'undefined'){
-        //   console.log(11);
+        const productList = JSON.parse(localStorage.getItem('productList'));
+        if(Boolean(productList) === false || productList === 'undefined'){
           localStorage.setItem('productList', JSON.stringify(d));
-        // }
-        this.eventManager.publish('Products were received', d);
+          return d;
+        } else {
+          return productList;
+        }
       });
   }
 

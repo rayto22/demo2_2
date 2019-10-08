@@ -1,11 +1,8 @@
 import { Templater } from '../templater/templater.js';
 
 class SortView{
-  constructor(contr) {
-    this.controller = contr;
+  constructor() {
     this.templater = new Templater;
-
-    window.addEventListener('unload', () => this.controller.saveSortStatus());
 
     this.domStorage = {
       sortBtnContainer: {
@@ -29,27 +26,33 @@ class SortView{
       }
     ];
 
+
+  }
+
+  hangEvents(initSort, saveSortStatus) {
     this.templateObjOfEvents = {
       name: 'sort',
       one: [
         {
           selector: '.sortBtn[data-sort-name="name"]',
           eventName: 'click',
-          funName: () => this.controller.initSort('name')
+          funName: () => initSort('name')
         },
         {
           selector: '.sortBtn[data-sort-name="price"]',
           eventName: 'click',
-          funName: () => this.controller.initSort('price')
+          funName: () => initSort('price')
         },
         {
           selector: '.sortBtn[data-sort-name="quantity"]',
           eventName: 'click',
-          funName: () => this.controller.initSort('quantity')
+          funName: () => initSort('quantity')
         }
       ],
       all: []
     };
+
+    window.addEventListener('unload', () => saveSortStatus());
   }
 
   unsetOrderIconToButton(sortType) {

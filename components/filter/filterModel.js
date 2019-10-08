@@ -139,7 +139,6 @@ class FilterModel{
   }
 
   filterByProp(prodArr, filterData) {
-    console.log(filterData);
     
     return prodArr.filter((prodObj) => {
       if(Array.isArray(prodObj[filterData.type]) === true){
@@ -163,7 +162,6 @@ class FilterModel{
   }
 
   getAllPropsForCateg(categName) {
-    console.log(categName);
     switch (categName) {
       case 'cancel': {
         return 'cancel';
@@ -234,7 +232,6 @@ class FilterModel{
           return prodObj.features;
         });
 
-        console.log();
         return {
           zonality: [...(new Set([].concat(...arrOfArrOfZonality)))],
           features: [...(new Set([].concat(...arrOfArrOfFeatures)))]

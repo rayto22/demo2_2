@@ -1,11 +1,8 @@
 import { Templater } from '../templater/templater.js';
 
 class BasketView{
-  constructor(contr) {
-    this.controller = contr;
+  constructor() {
     this.templater = new Templater;
-
-    window.addEventListener('unload', () => this.controller.saveBasketStatus());
 
     this.domStorage = {
       basketButtonDiv: {
@@ -21,7 +18,11 @@ class BasketView{
     this.tabsName = ['modalWindowContent', 'modalWindowHistory', 'modalWindowOrderForm'];
   }
 
-  renderBasketModalWindow() {
+  hangEvents(saveBasketStatus) {
+    window.addEventListener('unload', () => saveBasketStatus());
+  }
+
+  renderBasketModalWindow(renderBasketContent, renderPurchaseHistory, renderOrderForm) {
     const templateArrOfData = [{}];
     const templateObjOfEvents = {
       name: 'modalWindowBasket',
@@ -33,17 +34,17 @@ class BasketView{
       {
         selector: '.tab_1_content',
         eventName: 'click',
-        funName: () => this.controller.renderBasketContent()
+        funName: () => renderBasketContent()
       },
       {
         selector: '.tab_2_history',
         eventName: 'click',
-        funName: () => this.controller.renderPurchaseHistory()
+        funName: () => renderPurchaseHistory()
       },
       {
         selector: '.tab_3_order',
         eventName: 'click',
-        funName: () => this.controller.renderOrderForm()
+        funName: () => renderOrderForm()
       }],
       all: []}
     this.templater.initTemplate('basketModalTemplate', templateArrOfData, this.domStorage.basketModalWindowDiv.divDOM, templateObjOfEvents);
@@ -54,7 +55,7 @@ class BasketView{
     this.domStorage.basketModalWindow.tab3Order = document.querySelector('.tab_3_order');
   }
 
-  renderBasketButton(contentQuantity, contentTotalPrice) {
+  renderBasketButton(contentQuantity, contentTotalPrice, openBasketModalWindow) {
     const templateArrOfData = [{
       basketButtonClass: 'basket_button',
       basketQuantity: String(contentQuantity),
@@ -68,7 +69,7 @@ class BasketView{
       one: [{
         selector: '.basket_button',
         eventName: 'click',
-        funName: () => this.controller.openBasketModalWindow()
+        funName: () => openBasketModalWindow()
       }
     ],
     all: []
@@ -96,7 +97,10 @@ class BasketView{
     this.templater.resetContainer(this.domStorage.basketButtonDiv.divDOM, 'basketButton');
   }
 
-  renderBasketContent(contentData) {
+  renderBasketContent(contentData, increasePurchaseQuantity, decreasePurchaseQuantity) {
+    this.domStorage.basketModalWindow.tab1Content.classList.add('is-active');
+    this.domStorage.basketModalWindow.tab2History.classList.remove('is-active');
+    this.domStorage.basketModalWindow.tab3Order.classList.remove('is-active');
     this.domStorage.purchaseFields = {};
     Object.values(contentData.products).forEach((product) => {
       const templateArrOfData = [{
@@ -109,21 +113,21 @@ class BasketView{
       }];
 
       const templateObjOfEvents = {
-        name: `basketContent${product.id}`,
+        name: 'modalWindowContent',
         one: [{
           selector: `.basket_content_add_prod_${product.id}`,
           eventName: 'click',
-          funName: () => this.controller.increasePurchaseQuantity(product.id)
+          funName: () => increasePurchaseQuantity(product.id)
         },
         {
           selector: `.basket_content_remove_prod_${product.id}`,
           eventName: 'click',
-          funName: () => this.controller.decreasePurchaseQuantity(product.id, 1)
+          funName: () => decreasePurchaseQuantity(product.id, 1)
         },
         {
           selector: `.basket_content_cancel_prod_${product.id}`,
           eventName: 'click',
-          funName: () => this.controller.decreasePurchaseQuantity(product.id, product.quantity)
+          funName: () => decreasePurchaseQuantity(product.id, product.quantity)
         }
       ],
       all: []
@@ -136,12 +140,78 @@ class BasketView{
     })
   }
 
-  renderPurchaseHistory() {
-    console.log('history');
+  renderPurchaseHistory(historyData) {
+    this.domStorage.basketModalWindow.tab1Content.classList.remove('is-active');
+    this.domStorage.basketModalWindow.tab2History.classList.add('is-active');
+    this.domStorage.basketModalWindow.tab3Order.classList.remove('is-active');
+
+    historyData.forEach((product) => {
+
+      const templateArrOfData = [{
+        id: product.id,
+        imgSrc: product.url,
+        prodName: product.name,
+        prodQuantity: product.quantity,
+        prodPriceFor1: product.price,
+        prodPriceForAll: product.price*product.quantity
+      }];
+
+      this.templater.initTemplate('basketModalHistoryTemplate', templateArrOfData, this.domStorage.basketModalWindow.contentDivDom);
+    });
   }
 
-  renderOrderForm() {
-    console.log('orderForm');
+  renderOrderForm(purchaseQuantity, checkout) {
+    this.domStorage.basketModalWindow.tab1Content.classList.remove('is-active');
+    this.domStorage.basketModalWindow.tab2History.classList.remove('is-active');
+    this.domStorage.basketModalWindow.tab3Order.classList.add('is-active');
+
+    const templateArrOfData = [{}];
+
+    const templateObjOfEvents = {
+      name: 'modalWindowOrderForm',
+      one: [{
+        selector: '.busket_order_form',
+        eventName: 'submit',
+        funName: (e) => checkout(e)
+      }],
+      all: []
+    };
+
+    this.templater.initTemplate('basketModalOrderFormTemplate', templateArrOfData, this.domStorage.basketModalWindow.contentDivDom, templateObjOfEvents);
+    this.domStorage.order = {};
+    this.domStorage.order.confirmButtonDOM = document.querySelector('.basket_order_form_button_make_an_order');
+    this.domStorage.order.confirmButtonInfoPDOM = document.querySelector('.basket_order_button_info');
+    this.domStorage.order.nameInputDOM = document.querySelector('.basket_order_form_input_name');
+    this.domStorage.order.surnameInputDOM = document.querySelector('.basket_order_form_input_surname');
+    this.domStorage.order.emailInputDOM = document.querySelector('.basket_order_form_input_email');
+    this.domStorage.order.phoneInputDOM = document.querySelector('.basket_order_form_input_phone');
+    this.domStorage.order.destinationInputDOM = document.querySelector('.basket_order_form_input_destination');
+    this.domStorage.order.messageTextAreaDOM = document.querySelector('.basket_order_form_text_area_message');
+    if(purchaseQuantity > 0) {
+      this.domStorage.order.confirmButtonDOM.disabled = false;
+    } else {
+      this.domStorage.order.confirmButtonInfoPDOM.innerHTML = 'Your basket is empty.'
+    }
+  }
+
+  getDataFromOrderFields() {
+    return {
+      name: this.domStorage.order.nameInputDOM.value,
+      surname: this.domStorage.order.surnameInputDOM.value,
+      email: this.domStorage.order.emailInputDOM.value,
+      phone: this.domStorage.order.phoneInputDOM.value,
+      destination: this.domStorage.order.destinationInputDOM.value,
+      message: this.domStorage.order.messageTextAreaDOM.value
+    }
+  }
+
+  renderSuccessOrderForm(customersData) {
+    const templateArrOfData = [{
+      name: customersData.name,
+      surname: customersData.surname
+    }];
+
+    this.templater.initTemplate('basketModalOrderSuccessTemplate', templateArrOfData, this.domStorage.basketModalWindow.contentDivDom);
   }
 
   updateFieldsOfPurchase(prodData) {

@@ -5,7 +5,7 @@ class ProductCardController {
   constructor(prodData, eventManager) {
     this.eventManager = eventManager;
     this.model = new ProductCardModel(prodData);
-    this.view = new ProductCardView(this);
+    this.view = new ProductCardView();
 
     this.eventManager.subscribe(`Purchase ${prodData.id} is increased`, this.buyProduct.bind(this));
     this.eventManager.subscribe(`Purchase ${prodData.id} is decreased`, this.returnProduct.bind(this));
@@ -18,7 +18,7 @@ class ProductCardController {
 
   renderProductCard() {
     const productData = this.model.getProductData();
-    this.view.renderProductCard(productData);
+    this.view.renderProductCard(productData, this.buyProduct.bind(this), this.openModalWindowAddInfo.bind(this));
   }
 
   buyProduct(quantity) {
@@ -51,6 +51,8 @@ class ProductCardController {
 
   openModalWindowAddInfo() {
     this.view.renderModalWindowAddInfo();
+    const prodData = this.model.getProductData();
+    this.view.renderModalWindowAddInfoProperties(prodData);
   }
 
 }

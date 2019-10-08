@@ -6,7 +6,13 @@ class FilterController{
   constructor(eventManager) {
     this.eventManager = eventManager;
     this.model = new FilterModel();
-    this.view = new FilterView(this);
+    this.view = new FilterView();
+
+    this.hangEvents();
+  }
+
+  hangEvents() {
+    this.view.hangEvents(this.saveFilterStatus.bind(this), this.initFilterByName.bind(this));
   }
 
   rebuildProductList() {
@@ -129,19 +135,19 @@ class FilterController{
   }
 
   renderCancelButton(type) {
-    this.view.renderCancelButton(type);
+    this.view.renderCancelButton(type, this[this.view.cancelBtnObj[type].funName].bind(this));
   }
 
   renderCategories() {
-    this.view.renderCategories(this.model.getCategoriesList());
+    this.view.renderCategories(this.model.getCategoriesList(), this.initFilterByCateg.bind(this));
   }
 
   renderMainFilter() {
-    this.view.renderMainFilter();
+    this.view.renderMainFilter(this.initFilterByPriceOrQuantity.bind(this));
   }
 
   renderAdditionalFilter(categName, propsObj) {
-    this.view.renderAdditionalFilter(categName, propsObj);
+    this.view.renderAdditionalFilter(categName, propsObj, this.initAddFilterCheckBox.bind(this));
   }
 
 }
