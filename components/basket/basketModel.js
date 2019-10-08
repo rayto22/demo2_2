@@ -2,7 +2,6 @@ class BasketModel{
   constructor() {}
 
   initBasketStatus() {
-    // localStorage.removeItem('basketStatus');
     const basketStatus = localStorage.getItem('basketStatus');
     if(Boolean(basketStatus) === false || basketStatus === 'undefined'){
       localStorage.setItem('basketStatus', JSON.stringify(

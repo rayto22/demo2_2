@@ -3,7 +3,6 @@ class SortModel{
   }
 
   initSortStatus() {
-    // localStorage.removeItem('sortStatus');
     const sortStatus = localStorage.getItem('sortStatus');
     if(Boolean(sortStatus) === false || sortStatus === 'undefined'){
       localStorage.setItem('sortStatus', JSON.stringify(
